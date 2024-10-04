@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Recipe Book | Desserts | Strawberry Milkshake</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="fontAwesome/css/all.css">
+</head>
+<body class="body-recipes">
+
+    <div class="header">
+        <a href="#" id="back-link">
+            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+            <img src="images/logo-text.png" alt="Recipe Book Logo">
+        </a>
+    </div>
+
+    <div id="recipe">
+        <div class="recipe-details" id="output"></div>
+    </div>
+
+    <script>
+    // Function to get the recipe id from the URL
+    function getId() {
+        var url = window.location.href;
+        var pos = url.search("=");
+        var id = url.slice(pos + 1);  // Extract the ID from the URL
+        return id;
+    }
+
+    var id = getId();
+
+    // Fetch the recipe based on the ID
+    function getRecipe() {
+        var rootPath = "https://mysite.itvarsity.org/api/recipe-book/";
+        var fullPath = rootPath + "get-recipe/?id=" + id;  // Corrected the API path
+
+        fetch(fullPath)
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            // Correctly set the back link with the category
+            document.getElementById("back-link").href = "list-recipes.html?category=" + data[0].category;
+
+            var output = `
+                <img src="${rootPath}upload/${data[0].image}" alt="${data[0].title}"/>
+                <h1>${data[0].title}</h1>
+                <div class="recipe-details-ingredients">
+                    <h2>Ingredients</h2>
+                    <ul>
+                        ${data[0].ingredients.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+                <div class="recipe-details-steps">
+                    <h2>Method</h2>
+                    <ol>
+                        ${data[0].method.map(step => `<li>${step}</li>`).join('')}
+                    </ol>
+                </div>
+            `;
+            document.getElementById("output").innerHTML = output;
+        })
+      
+    }
+
+
+    window.onload = getRecipe;
+    </script>
+</body>
+</html>
