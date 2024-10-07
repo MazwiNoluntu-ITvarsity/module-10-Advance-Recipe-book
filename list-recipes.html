@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="fontAwesome/css/all.css">
 </head>
-<body class="body-meals">
+<body class="body-meals" onload="getRecipList()">
 
     <div class="header">
         <a href="index.html">
@@ -21,7 +21,7 @@
     </div>
 
     <script>
-    
+    var category = getCategory();
     function getCategory() {
         var url = window.location.href;
         var pos = url.search("=");
@@ -35,9 +35,12 @@
         var rootPath = "https://mysite.itvarsity.org/api/recipe-book/";
         var fullPath = rootPath + "get-recipes/?category=" + category;
 
+
+
         fetch(fullPath)
         .then(function(response) {
             return response.json();
+            console.log(data);
         })
         .then(function(data) {
             var output = "";
